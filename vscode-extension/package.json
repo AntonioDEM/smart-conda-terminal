@@ -3,7 +3,7 @@
   "displayName": "Smart Conda Workspace",
   "description": "Minimal workspace configuration and versioning for conda projects",
   "version": "1.0.2",
-  "publisher": "smart-conda-terminal",
+  "publisher": "antonio-demarcus",
   "license": "MIT",
   "author": {
     "name": "Antonio Demarcus",
