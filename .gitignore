@@ -1,0 +1,46 @@
+# Dependencies
+.node_modules/
+npm-debug.log*
+package-lock.json
+yarn.lock
+
+# Build outputs
+out/
+dist/
+*.vsix
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Cache
+.npm
+.cache/
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Backup files
+*.backup
+*.bak
+
+# Smart Conda Terminal specific
+.smart-conda-terminal/
+conda-meta/

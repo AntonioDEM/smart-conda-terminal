@@ -1,0 +1,12 @@
+name: sct-dev
+version: 1.0.0
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - nodejs>=16
+  - pip
+  - git
+  - pip:
+    - vsce
