@@ -1,6 +1,4 @@
-# Smart Conda Terminal - JavaScript Edition
-
-![Smart Conda Workspace](smart-conda-workspace/resources/icons/favicon-128x128.png)
+# <img src="./resources/icons/favicon.svg" width="72" height="72" style="vertical-align: middle; margin-right: 1px;"> Smart Conda Terminal
 
 VS Code extension for automated conda environment management, built with JavaScript.
 
@@ -82,7 +80,28 @@ npm run package
 
 This will create a `.vsix` file in the project root.
 
+## 🤝 Contribuire
+
+Le contribuzioni sono benvenute! Segui queste linee guida:
+
+### Come Contribuire
+
+1. **Fork** il repository
+2. **Crea branch** per la feature (`git checkout -b feature/NuovaFeature`)
+3. **Commit** le modifiche (`git commit -m 'Aggiunta NuovaFeature'`)
+4. **Push** al branch (`git push origin feature/NuovaFeature`)
+5. **Apri Pull Request**
+
 ---
+## 📞 Contatti
+
+- **Developer**: [Antonio DEM](https://github.com/AntonioDEM)
+- **GitHub Issues**: [Segnala problemi](https://github.com/AntonioDEM/ai-toolkit-directory/issues)
+- **Pull Requests**: [Contribuisci](https://github.com/AntonioDEM/ai-toolkit-directory/pulls)
+
+## 📄 Licenza
+
+Questo progetto è sotto licenza MIT - vedi il file [LICENSE](LICENSE) per dettagli.
 
 **Project Path:** /Users/tony/Documents/PROJECTPY/smart-conda-terminal
 **Created:** Sab 27 Set 2025 08:28:49 CEST
