@@ -1,21 +1,21 @@
 {
   "name": "smart-conda-workspace",
+  "publisher": "antoniodemarcus",
+  "version": "1.0.3",
   "displayName": "Smart Conda Workspace",
   "description": "Minimal workspace configuration and versioning for conda projects",
-  "version": "1.0.2",
-  "publisher": "antonio-demarcus",
   "license": "MIT",
   "author": {
     "name": "Antonio Demarcus",
     "email": "iperstatica@gmail.com"
   },
   "repository": {
-  "type": "git",
-  "url": "https://github.com/smart-conda-terminal/smart-conda-workspace.git"
+    "type": "git",
+    "url": "https://github.com/smart-conda-terminal/smart-conda-workspace.git"
   },
   "homepage": "https://github.com/smart-conda-terminal/smart-conda-workspace#readme",
   "bugs": {
-  "url": "https://github.com/smart-conda-terminal/smart-conda-workspace/issues"
+    "url": "https://github.com/smart-conda-terminal/smart-conda-workspace/issues"
   },
   "engines": {
     "vscode": "^1.70.0",
@@ -25,7 +25,7 @@
     "Other"
   ],
   "keywords": [
-   "conda",
+    "conda",
     "python",
     "environment",
     "terminal",
@@ -83,6 +83,5 @@
       ]
     }
   },
-  "scripts": {
-  }
+  "scripts": {}
 }
