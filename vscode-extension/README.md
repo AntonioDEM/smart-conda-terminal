@@ -1,6 +1,6 @@
 # Smart Conda Workspace
 
-![Extension Icon](https://raw.githubusercontent.com/smart-conda-terminal/smart-conda-terminal/main/vscode-extension/icons/favicon-128x128.png)
+![Smart Conda Workspace](./vscode-extension/icons/favicon-128x128.png)
 
 Minimal VS Code extension for automated conda environment workspace configuration and project versioning.
 
@@ -31,23 +31,23 @@ For the extension to work optimally, your Python project should have this basic 
 
 ```markdown
 
-my-python-project/ 
-├── scripts/ 
-│ 
-└── update-version.js # Required for version management 
-├── package.json # Required for version tracking 
-├── pyproject.toml # Alternative to package.json 
-├── environment.yml # Conda environment definition 
-├── src/ 
-│		│ 
-│		└── my_package/  
-├── **init**.py 
-│ 
-└── main.py 
-├── tests/ 
-│ 	│ 
-│ 	└── test_main.py 
-├── README.md 
+my-python-project/
+├── scripts/
+│
+└── update-version.js # Required for version management
+├── package.json # Required for version tracking
+├── pyproject.toml # Alternative to package.json
+├── environment.yml # Conda environment definition
+├── src/
+│		│
+│		└── my_package/
+├── **init**.py
+│
+└── main.py
+├── tests/
+│ 	│
+│ 	└── test_main.py
+├── README.md
 └── .gitignore
 
 
@@ -277,7 +277,7 @@ To use the "Update Project Version" command, your `package.json` must include:
   "description": "Your project description",
   "scripts": {
     "version:patch": "node scripts/update-version.js patch",
-    "version:minor": "node scripts/update-version.js minor", 
+    "version:minor": "node scripts/update-version.js minor",
     "version:major": "node scripts/update-version.js major"
   },
   "author": "Your Name",
