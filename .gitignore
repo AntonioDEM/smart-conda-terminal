@@ -7,7 +7,6 @@ yarn.lock
 # Build outputs
 out/
 dist/
-*.vsix
 
 # OS files
 .DS_Store
@@ -16,7 +15,6 @@ Thumbs.db
 *.swo
 
 # IDE
-.vscode/settings.json
 .idea/
 
 # Logs
