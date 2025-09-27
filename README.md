@@ -1,5 +1,7 @@
 # Smart Conda Terminal - JavaScript Edition
 
+![Smart Conda Workspace](smart-conda-workspace/vscode-extension/icons/favicon-128x128.png)
+
 VS Code extension for automated conda environment management, built with JavaScript.
 
 ## Project Structure
@@ -42,7 +44,7 @@ npm run package
 
 # Update version
 npm run version:patch
-npm run version:minor  
+npm run version:minor
 npm run version:major
 
 # Run tests
@@ -82,7 +84,7 @@ This will create a `.vsix` file in the project root.
 
 ---
 
-**Project Path:** /Users/tony/Documents/PROJECTPY/smart-conda-terminal  
-**Created:** Sab 27 Set 2025 08:28:49 CEST  
-**User:** tony  
+**Project Path:** /Users/tony/Documents/PROJECTPY/smart-conda-terminal
+**Created:** Sab 27 Set 2025 08:28:49 CEST
+**User:** tony
 **Environment:** sct-dev
