@@ -1,6 +1,6 @@
 # Smart Conda Workspace
 
-![Smart Conda Workspace](./vscode-extension/icons/favicon-128x128.png)
+![Smart Conda Workspace](smart-conda-terminal/vscode-extension/icons/favicon-128x128.png)
 
 Minimal VS Code extension for automated conda environment workspace configuration and project versioning.
 
