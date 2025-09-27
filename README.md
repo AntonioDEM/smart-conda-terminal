@@ -1,6 +1,6 @@
 # Smart Conda Terminal - JavaScript Edition
 
-![Smart Conda Workspace](smart-conda-workspace/vscode-extension/icons/favicon-128x128.png)
+![Smart Conda Workspace](smart-conda-workspace/resources/icons/favicon-128x128.png)
 
 VS Code extension for automated conda environment management, built with JavaScript.
 
