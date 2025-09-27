@@ -2,12 +2,12 @@
   "name": "smart-conda-terminal",
   "displayName": "Smart Conda Terminal",
   "description": "Automated conda environment management for Python projects in VS Code. Zero-configuration setup with intelligent project detection and seamless terminal integration.",
-  "version": "$VERSION",
+  "version": "1.0.1",
   "publisher": "smart-conda-terminal",
   "license": "MIT",
   "author": {
-    "name": "$AUTHOR_NAME",
-    "email": "$EMAIL"
+    "name": "Antonio Demarcus",
+    "email": "iperstatica@gmail.com"
   },
   "homepage": "https://github.com/smart-conda-terminal/smart-conda-terminal",
   "repository": {
@@ -43,7 +43,7 @@
     "color": "#1e1e1e",
     "theme": "dark"
   },
-  "icon": "resources/icons/extension-icon.png",
+  "icon": "resources/icons/favicon-64x64.png",
   "activationEvents": [
     "workspaceContains:**/environment.yml",
     "workspaceContains:**/environment.yaml",
@@ -102,7 +102,14 @@
         },
         "smartCondaTerminal.shellIntegration": {
           "type": "string",
-          "enum": ["auto", "zsh", "bash", "fish", "powershell", "none"],
+          "enum": [
+            "auto",
+            "zsh",
+            "bash",
+            "fish",
+            "powershell",
+            "none"
+          ],
           "default": "auto",
           "description": "Shell type for conda integration (auto-detect recommended)"
         }
