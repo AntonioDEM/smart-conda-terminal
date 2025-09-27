@@ -1,0 +1,88 @@
+{
+  "name": "smart-conda-workspace",
+  "displayName": "Smart Conda Workspace",
+  "description": "Minimal workspace configuration and versioning for conda projects",
+  "version": "1.0.2",
+  "publisher": "smart-conda-terminal",
+  "license": "MIT",
+  "author": {
+    "name": "Antonio Demarcus",
+    "email": "iperstatica@gmail.com"
+  },
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/smart-conda-terminal/smart-conda-workspace.git"
+  },
+  "homepage": "https://github.com/smart-conda-terminal/smart-conda-workspace#readme",
+  "bugs": {
+  "url": "https://github.com/smart-conda-terminal/smart-conda-workspace/issues"
+  },
+  "engines": {
+    "vscode": "^1.70.0",
+    "node": ">=16.0.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+   "conda",
+    "python",
+    "environment",
+    "terminal",
+    "automation",
+    "data-science",
+    "machine-learning",
+    "anaconda",
+    "miniconda",
+    "workspace",
+    "development",
+    "nodejs",
+    "windows",
+    "macos",
+    "linux",
+    "powershell"
+  ],
+  "icon": "icons/favicon-128x128.png",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "workspaceContains:**/environment.yml",
+    "workspaceContains:**/environment.yaml",
+    "workspaceContains:**/pyproject.toml",
+    "workspaceContains:**/.condarc",
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "smartCondaWorkspace.configureWorkspace",
+        "title": "Configure Workspace",
+        "category": "Smart Conda",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "smartCondaWorkspace.updateVersion",
+        "title": "Update Project Version",
+        "category": "Smart Conda",
+        "icon": "$(tag)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "smartCondaWorkspace.configureWorkspace",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "smartCondaWorkspace.updateVersion",
+          "when": "workspaceFolderCount > 0"
+        }
+      ]
+    }
+  },
+  "scripts": {
+  }
+}
