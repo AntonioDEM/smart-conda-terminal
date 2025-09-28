@@ -1,5 +1,9 @@
 # <img src="./resources/icons/favicon.svg" width="36" height="36" style="vertical-align: middle; margin-right: 1px;"> Smart Conda Terminal
 
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg) <img src="https://img.shields.io/badge/Node-24.8.0%2B-blue"/>![Status](https://img.shields.io/badge/status-stable-green.svg)![Last Commit](https://img.shields.io/badge/last_commit-September_2025-green.svg)
+
+### S.O.S : ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
+
 VS Code extension for automated conda environment management, built with JavaScript.
 
 ## Project Structure
