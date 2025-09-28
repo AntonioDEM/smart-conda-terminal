@@ -1,4 +1,4 @@
-# <img src="./resources/icons/favicon.svg" width="72" height="72" style="vertical-align: middle; margin-right: 1px;"> Smart Conda Terminal
+# <img src="./resources/icons/favicon.svg" width="36" height="36" style="vertical-align: middle; margin-right: 1px;"> Smart Conda Terminal
 
 VS Code extension for automated conda environment management, built with JavaScript.
 
