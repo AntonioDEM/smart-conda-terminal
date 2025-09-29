@@ -154,7 +154,7 @@ async function getCondaEnvironments() {
     try {
         const isWindows = process.platform === 'win32';
 
-        // AGGIUNGI QUESTO: Get conda base path first
+        // Get conda base path first
         let condaBase;
         try {
             condaBase = execSync('conda info --base', {
@@ -170,18 +170,31 @@ async function getCondaEnvironments() {
                 if (!fs.existsSync(condaBase)) {
                     condaBase = path.join(homeDir, 'miniconda3');
                 }
+                if (!fs.existsSync(condaBase)) {
+                    condaBase = path.join(homeDir, 'anaconda3');
+                }
             } else {
                 condaBase = path.join(homeDir, 'miniconda3');
+                if (!fs.existsSync(condaBase)) {
+                    condaBase = path.join(homeDir, 'anaconda3');
+                }
             }
         }
 
         // Get list of conda environments
-        const condaEnvList = execSync('conda env list --json', { encoding: 'utf8' });
+        const condaEnvList = execSync('conda env list --json', {
+            encoding: 'utf8',
+            windowsHide: true,
+            timeout: 10000
+        });
         const envData = JSON.parse(condaEnvList);
 
         const environments = [];
 
         for (const envPath of envData.envs) {
+            // Skip if path doesn't exist
+            if (!fs.existsSync(envPath)) continue;
+
             const envName = path.basename(envPath);
 
             // Platform-specific paths
@@ -189,10 +202,10 @@ async function getCondaEnvironments() {
                 ? path.join(envPath, 'python.exe')
                 : path.join(envPath, 'bin', 'python');
 
-            // CAMBIA SOLO QUESTA RIGA:
+            // Use conda base for conda executable
             const condaPath = isWindows
-                ? path.join(condaBase, 'Scripts', 'conda.exe')  // ← FIX: usa condaBase invece di path.dirname(envPath)
-                : path.join(condaBase, 'bin', 'conda');         // ← FIX: usa condaBase invece di path.dirname(envPath)
+                ? path.join(condaBase, 'Scripts', 'conda.exe')
+                : path.join(condaBase, 'bin', 'conda');
 
             // Try to get Python version
             let pythonVersion = 'Unknown';
@@ -203,9 +216,10 @@ async function getCondaEnvironments() {
 
                 const versionOutput = execSync(versionCmd, {
                     encoding: 'utf8',
-                    timeout: 5000
+                    timeout: 5000,
+                    windowsHide: true
                 });
-                pythonVersion = versionOutput.trim();
+                pythonVersion = versionOutput.trim().replace('Python ', '');
             } catch (e) {
                 // Ignore version detection errors
             }
@@ -232,26 +246,65 @@ async function getCondaEnvironments() {
     } catch (error) {
         console.error('Failed to get conda environments:', error);
 
-        // Fallback: create default environment info based on platform
+        // Enhanced fallback for Windows
         const homeDir = require('os').homedir();
         const isWindows = process.platform === 'win32';
 
         let condaBase;
+        const possiblePaths = [];
+
         if (isWindows) {
-            condaBase = path.join(homeDir, 'miniconda3');
-            if (!fs.existsSync(condaBase)) {
-                condaBase = path.join(homeDir, 'anaconda3');
-            }
+            possiblePaths.push(
+                path.join(homeDir, 'miniconda3'),
+                path.join(homeDir, 'anaconda3'),
+                'C:\\ProgramData\\miniconda3',
+                'C:\\ProgramData\\anaconda3',
+                'C:\\Miniconda3',
+                'C:\\Anaconda3'
+            );
         } else {
-            condaBase = path.join(homeDir, 'miniconda3');
-            if (!fs.existsSync(condaBase)) {
-                condaBase = path.join(homeDir, 'anaconda3');
+            possiblePaths.push(
+                path.join(homeDir, 'miniconda3'),
+                path.join(homeDir, 'anaconda3'),
+                '/opt/miniconda3',
+                '/opt/anaconda3'
+            );
+        }
+
+        for (const possiblePath of possiblePaths) {
+            if (fs.existsSync(possiblePath)) {
+                condaBase = possiblePath;
+                break;
             }
         }
 
-        const defaultEnvs = ['base', 'sct-dev'];
+        if (!condaBase) {
+            // Ultimate fallback
+            condaBase = isWindows
+                ? path.join(homeDir, 'miniconda3')
+                : path.join(homeDir, 'miniconda3');
+        }
 
-        return defaultEnvs.map(envName => {
+        // Get all environments by scanning envs directory
+        const envsDir = path.join(condaBase, 'envs');
+        let envNames = ['base']; // Always include base
+
+        if (fs.existsSync(envsDir)) {
+            try {
+                const envEntries = fs.readdirSync(envsDir, { withFileTypes: true });
+                const envDirs = envEntries
+                    .filter(entry => entry.isDirectory())
+                    .map(entry => entry.name);
+                envNames = [...envNames, ...envDirs];
+            } catch (e) {
+                console.error('Failed to read envs directory:', e);
+                envNames = ['base', 'sct-dev']; // Fallback to default
+            }
+        } else {
+            envNames = ['base', 'sct-dev']; // Fallback to default
+        }
+
+        return envNames.map(envName => {
             const envPath = envName === 'base' ? condaBase : path.join(condaBase, 'envs', envName);
 
             return {
@@ -312,18 +365,46 @@ function generateWorkspaceConfig(workspaceFolder, condaEnv, projectType) {
 
     // Platform-specific terminal integration
     if (isWindows) {
-        // Windows PowerShell integration
-        config.settings["terminal.integrated.defaultProfile.windows"] = "conda-env";
+        // Enhanced Windows terminal integration
+        const condaHookPath = path.join(path.dirname(condaEnv.conda), '..', 'Lib', 'site-packages', 'conda', 'shell', 'condabin', 'conda-hook.ps1');
+        const activateBatPath = path.join(path.dirname(condaEnv.conda), 'activate.bat');
+
+        config.settings["terminal.integrated.defaultProfile.windows"] = "conda-env-powershell";
         config.settings["terminal.integrated.profiles.windows"] = {
-            "conda-env": {
-                "path": "powershell.exe",
+            "conda-env-powershell": {
+                "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "args": [
+                    "-ExecutionPolicy", "ByPass",
                     "-NoExit",
                     "-Command",
-                    `conda activate ${condaEnv.name}`
-                ]
+                    `& '${condaHookPath}'; conda activate ${condaEnv.name}; Clear-Host; Write-Host '🐍 Ambiente ${condaEnv.name} attivato!' -ForegroundColor Green; Write-Host 'Python:' $(python --version 2>$null) -ForegroundColor Cyan`
+                ],
+                "icon": "terminal-powershell",
+                "color": "terminal.ansiGreen"
+            },
+            "conda-env-cmd": {
+                "path": "C:\\Windows\\System32\\cmd.exe",
+                "args": [
+                    "/K",
+                    `"${activateBatPath}" ${condaEnv.name} && echo Ambiente ${condaEnv.name} attivato!`
+                ],
+                "icon": "terminal-cmd",
+                "color": "terminal.ansiBlue"
+            },
+            "PowerShell": {
+                "source": "PowerShell",
+                "icon": "terminal-powershell"
             }
         };
+
+        // Additional Windows-specific settings
+        Object.assign(config.settings, {
+            "terminal.integrated.defaultLocation": "editor",
+            "terminal.integrated.enableMultiLinePasteWarning": "never",
+            "files.eol": "\n",
+            "files.encoding": "utf8"
+        });
+
     } else {
         // macOS/Linux integration
         const shellPath = process.env.SHELL || '/bin/bash';

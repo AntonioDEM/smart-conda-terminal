@@ -9,6 +9,8 @@ out/
 dist/
 *.vsix
 
+#vsCode File
+smart-conda-terminal copia.code-workspace
 # OS files
 .DS_Store
 Thumbs.db
