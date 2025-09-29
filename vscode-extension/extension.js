@@ -152,12 +152,34 @@ function detectProjectType(workspaceFolder) {
 
 async function getCondaEnvironments() {
     try {
+        const isWindows = process.platform === 'win32';
+
+        // AGGIUNGI QUESTO: Get conda base path first
+        let condaBase;
+        try {
+            condaBase = execSync('conda info --base', {
+                encoding: 'utf8',
+                timeout: 5000,
+                windowsHide: true
+            }).trim();
+        } catch (e) {
+            // Fallback to common paths if command fails
+            const homeDir = require('os').homedir();
+            if (isWindows) {
+                condaBase = 'C:\\ProgramData\\miniconda3';
+                if (!fs.existsSync(condaBase)) {
+                    condaBase = path.join(homeDir, 'miniconda3');
+                }
+            } else {
+                condaBase = path.join(homeDir, 'miniconda3');
+            }
+        }
+
         // Get list of conda environments
         const condaEnvList = execSync('conda env list --json', { encoding: 'utf8' });
         const envData = JSON.parse(condaEnvList);
 
         const environments = [];
-        const isWindows = process.platform === 'win32';
 
         for (const envPath of envData.envs) {
             const envName = path.basename(envPath);
@@ -167,9 +189,10 @@ async function getCondaEnvironments() {
                 ? path.join(envPath, 'python.exe')
                 : path.join(envPath, 'bin', 'python');
 
+            // CAMBIA SOLO QUESTA RIGA:
             const condaPath = isWindows
-                ? path.join(path.dirname(envPath), 'Scripts', 'conda.exe')
-                : path.join(path.dirname(envPath), 'bin', 'conda');
+                ? path.join(condaBase, 'Scripts', 'conda.exe')  // ← FIX: usa condaBase invece di path.dirname(envPath)
+                : path.join(condaBase, 'bin', 'conda');         // ← FIX: usa condaBase invece di path.dirname(envPath)
 
             // Try to get Python version
             let pythonVersion = 'Unknown';
