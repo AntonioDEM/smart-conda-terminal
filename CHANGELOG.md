@@ -5,167 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.4] - 2025-09-29
+## [1.0.4] - 2025-09-29
 
 ### Added
-- TODO: Document new features
+- Complete version management system
+- Support for multiple file formats (package.json, environment.yml, pyproject.toml)
+- VS Code extension package.json synchronization
 
 ### Changed
-- TODO: Document changes
+- Improved update-version.js script
+- Better error handling and validation
 
 ### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
-
-## [1.1.3] - 2025-09-29
-
-### Added
-- TODO: Document new features
-
-### Changed
-- TODO: Document changes
-
-### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [1.1.2] - 2025-09-29
-
-### Added
-- TODO: Document new features
-
-### Changed
-- TODO: Document changes
-
-### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [1.1.1] - 2025-09-29
-
-### Added
-- TODO: Document new features
-
-### Changed
-- TODO: Document changes
-
-### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [1.1.0] - 2025-09-27
-
-### Added
-- TODO: Document new features
-
-### Changed
-- TODO: Document changes
-
-### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [2.0.0] - 2025-09-27
-
-### Added
-- TODO: Document new features
-
-### Changed
-- TODO: Document changes
-
-### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
+- CHANGELOG duplicate entries
+- Version synchronization across all project files
 
 ## [1.0.0] - 2025-09-27
 
 ### Added
-- TODO: Document new features
-
-### Changed
-- TODO: Document changes
-
-### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
-
-## [1.0.1] - 2025-09-27
-
-### Added
-- TODO: Document new features
-
-### Changed
-- TODO: Document changes
-
-### Fixed
-- TODO: Document bug fixes
-
-### Security
-- TODO: Document security improvements
-
-
-## [1.0.0] - 2025-09-27
-
-### Added
-- Initial project structure for JavaScript-based VS Code extension
+- Initial project structure for VS Code extension
 - Automated conda environment detection and setup
-- Shell integration for auto-activation (function: sct_dev)
+- Shell integration for auto-activation
 - Version management script
 - VS Code workspace configuration
-- Basic extension functionality
+- Cross-platform support (macOS, Linux, Windows)
 
 ### Technical
-- JavaScript implementation (no TypeScript)
+- JavaScript implementation
 - Simplified build process
-- Cross-platform support
 - Automated dependency installation
 - Environment: sct-dev

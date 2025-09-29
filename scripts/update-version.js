@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Smart Conda Terminal - Version Update Script
- * Automatically updates version in package.json and CHANGELOG.md
+ * Smart Conda Terminal - Version Update Script (Complete)
+ * Automatically updates version in package.json, environment.yml, pyproject.toml, and CHANGELOG.md
  * Usage: node scripts/update-version.js [major|minor|patch] [--dry-run] [--no-git]
  */
 
@@ -13,6 +13,9 @@ const { execSync } = require('child_process');
 // Configuration
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const PACKAGE_JSON_PATH = path.join(PROJECT_ROOT, 'package.json');
+const VSCODE_EXTENSION_PACKAGE = path.join(PROJECT_ROOT, 'vscode-extension', 'package.json');
+const PYPROJECT_PATH = path.join(PROJECT_ROOT, 'pyproject.toml');
+const ENVIRONMENT_PATH = path.join(PROJECT_ROOT, 'environment.yml');
 const CHANGELOG_PATH = path.join(PROJECT_ROOT, 'CHANGELOG.md');
 
 // Color console output
@@ -46,10 +49,14 @@ function info(message) {
   log(`ℹ️  ${message}`, 'blue');
 }
 
-// Simple version increment (basic implementation)
+// Simple version increment
 function incrementVersion(version, type) {
   const parts = version.split('.').map(Number);
-  
+
+  if (parts.length !== 3 || parts.some(isNaN)) {
+    error(`Invalid version format: ${version}. Expected format: x.y.z`);
+  }
+
   if (type === 'major') {
     parts[0] += 1;
     parts[1] = 0;
@@ -60,7 +67,7 @@ function incrementVersion(version, type) {
   } else if (type === 'patch') {
     parts[2] += 1;
   }
-  
+
   return parts.join('.');
 }
 
@@ -101,19 +108,30 @@ Examples:
 function validateEnvironment() {
   info('🔍 Validating environment...');
 
-  // Check if we're in the right directory
-  if (!fs.existsSync(PACKAGE_JSON_PATH)) {
-    error(`package.json not found at ${PACKAGE_JSON_PATH}. Are you in the right directory?`);
+  // Check if we have at least one version file
+  const hasPackageJson = fs.existsSync(PACKAGE_JSON_PATH);
+  const hasPyproject = fs.existsSync(PYPROJECT_PATH);
+  const hasEnvironment = fs.existsSync(ENVIRONMENT_PATH);
+
+  if (!hasPackageJson && !hasPyproject && !hasEnvironment) {
+    error('No package.json, pyproject.toml, or environment.yml found. Are you in the right directory?');
   }
 
-  // Check if git is available and we're in a git repository
+  // Check git status for uncommitted changes
   try {
     execSync('git --version', { stdio: 'ignore' });
-    const gitDir = execSync('git rev-parse --git-dir', { 
+    const gitStatus = execSync('git status --porcelain', {
       cwd: PROJECT_ROOT,
       encoding: 'utf8'
     }).trim();
-    success(`Git repository: ${gitDir}`);
+
+    if (gitStatus) {
+      warning('You have uncommitted changes:');
+      console.log(gitStatus);
+      warning('Consider committing your changes before updating version');
+    }
+
+    success('Git repository found');
   } catch (e) {
     warning('Git is not available or this is not a git repository');
   }
@@ -121,37 +139,124 @@ function validateEnvironment() {
   success('Environment validation passed');
 }
 
-// Read and parse package.json
-function readPackageJson() {
-  try {
-    const content = fs.readFileSync(PACKAGE_JSON_PATH, 'utf8');
-    return JSON.parse(content);
-  } catch (e) {
-    error(`Failed to read package.json: ${e.message}`);
+// Read current version from available files
+function getCurrentVersion() {
+  let version = '0.0.0';
+
+  // Try package.json first
+  if (fs.existsSync(PACKAGE_JSON_PATH)) {
+    try {
+      const packageData = JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, 'utf8'));
+      if (packageData.version) {
+        version = packageData.version;
+        info(`Found version ${version} in package.json`);
+        return { version, source: 'package.json' };
+      }
+    } catch (e) {
+      warning('Failed to read package.json');
+    }
   }
+
+  // Try pyproject.toml
+  if (fs.existsSync(PYPROJECT_PATH)) {
+    try {
+      const content = fs.readFileSync(PYPROJECT_PATH, 'utf8');
+      const versionMatch = content.match(/version\s*=\s*["']([^"']+)["']/);
+      if (versionMatch) {
+        version = versionMatch[1];
+        info(`Found version ${version} in pyproject.toml`);
+        return { version, source: 'pyproject.toml' };
+      }
+    } catch (e) {
+      warning('Failed to read pyproject.toml');
+    }
+  }
+
+  // Try environment.yml
+  if (fs.existsSync(ENVIRONMENT_PATH)) {
+    try {
+      const content = fs.readFileSync(ENVIRONMENT_PATH, 'utf8');
+      const versionMatch = content.match(/version:\s*([^\s\n]+)/);
+      if (versionMatch) {
+        version = versionMatch[1];
+        info(`Found version ${version} in environment.yml`);
+        return { version, source: 'environment.yml' };
+      }
+    } catch (e) {
+      warning('Failed to read environment.yml');
+    }
+  }
+
+  return { version, source: null };
 }
 
-// Write package.json with pretty formatting
-function writePackageJson(packageData) {
+// Update package.json
+function updatePackageJson(newVersion) {
+  if (!fs.existsSync(PACKAGE_JSON_PATH)) return;
+
   try {
+    const packageData = JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, 'utf8'));
+    packageData.version = newVersion;
     const content = JSON.stringify(packageData, null, 2) + '\n';
     fs.writeFileSync(PACKAGE_JSON_PATH, content, 'utf8');
-    success(`Updated package.json to version ${packageData.version}`);
+    success(`Updated package.json to version ${newVersion}`);
   } catch (e) {
-    error(`Failed to write package.json: ${e.message}`);
+    error(`Failed to update package.json: ${e.message}`);
   }
 }
 
-// Update or create CHANGELOG.md
+// Update VS Code extension package.json
+function updateVSCodeExtension(newVersion) {
+  if (!fs.existsSync(VSCODE_EXTENSION_PACKAGE)) return;
+
+  try {
+    const packageData = JSON.parse(fs.readFileSync(VSCODE_EXTENSION_PACKAGE, 'utf8'));
+    packageData.version = newVersion;
+    const content = JSON.stringify(packageData, null, 2) + '\n';
+    fs.writeFileSync(VSCODE_EXTENSION_PACKAGE, content, 'utf8');
+    success(`Updated vscode-extension/package.json to version ${newVersion}`);
+  } catch (e) {
+    warning(`Failed to update vscode-extension/package.json: ${e.message}`);
+  }
+}
+
+// Update pyproject.toml
+function updatePyproject(newVersion) {
+  if (!fs.existsSync(PYPROJECT_PATH)) return;
+
+  try {
+    let content = fs.readFileSync(PYPROJECT_PATH, 'utf8');
+    content = content.replace(
+      /version\s*=\s*["'][^"']+["']/,
+      `version = "${newVersion}"`
+    );
+    fs.writeFileSync(PYPROJECT_PATH, content, 'utf8');
+    success(`Updated pyproject.toml to version ${newVersion}`);
+  } catch (e) {
+    error(`Failed to update pyproject.toml: ${e.message}`);
+  }
+}
+
+// Update environment.yml
+function updateEnvironment(newVersion) {
+  if (!fs.existsSync(ENVIRONMENT_PATH)) return;
+
+  try {
+    let content = fs.readFileSync(ENVIRONMENT_PATH, 'utf8');
+    content = content.replace(
+      /version:\s*[^\s\n]+/,
+      `version: ${newVersion}`
+    );
+    fs.writeFileSync(ENVIRONMENT_PATH, content, 'utf8');
+    success(`Updated environment.yml to version ${newVersion}`);
+  } catch (e) {
+    error(`Failed to update environment.yml: ${e.message}`);
+  }
+}
+
+// Update or create CHANGELOG.md (FIXED - no duplicates)
 function updateChangelog(newVersion, oldVersion) {
-  const changelogTemplate = `# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [${newVersion}] - ${new Date().toISOString().split('T')[0]}
+  const newEntry = `## [${newVersion}] - ${new Date().toISOString().split('T')[0]}
 
 ### Added
 - TODO: Document new features
@@ -167,15 +272,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 `;
 
-  let changelogContent = changelogTemplate;
-
-  // If CHANGELOG.md already exists, insert new version at the top
   if (fs.existsSync(CHANGELOG_PATH)) {
-    const existingChangelog = fs.readFileSync(CHANGELOG_PATH, 'utf8');
-    changelogContent = changelogTemplate + '\n' + existingChangelog;
+    // Read existing changelog
+    const existingContent = fs.readFileSync(CHANGELOG_PATH, 'utf8');
+
+    // Find where to insert new version (after first heading but before any existing versions)
+    const lines = existingContent.split('\n');
+    let insertIndex = -1;
+
+    // Look for first ## [version] entry
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].match(/^## \[[\d.]+\]/)) {
+        insertIndex = i;
+        break;
+      }
+    }
+
+    if (insertIndex !== -1) {
+      // Insert before existing versions
+      lines.splice(insertIndex, 0, newEntry);
+      const newContent = lines.join('\n');
+      fs.writeFileSync(CHANGELOG_PATH, newContent, 'utf8');
+    } else {
+      // No existing versions found, append after header
+      const headerEndIndex = lines.findIndex((line, idx) => line.trim() === '' && idx > 5) || 10;
+      lines.splice(headerEndIndex + 1, 0, newEntry);
+      const newContent = lines.join('\n');
+      fs.writeFileSync(CHANGELOG_PATH, newContent, 'utf8');
+    }
+  } else {
+    // Create new changelog
+    const changelogTemplate = `# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+${newEntry}`;
+
+    fs.writeFileSync(CHANGELOG_PATH, changelogTemplate, 'utf8');
   }
 
-  fs.writeFileSync(CHANGELOG_PATH, changelogContent, 'utf8');
   success(`Updated CHANGELOG.md with version ${newVersion}`);
 }
 
@@ -197,41 +335,53 @@ ${colors.cyan}╔═════════════════════
   // Validate environment
   validateEnvironment();
 
-  // Read current package.json
-  const packageData = readPackageJson();
-  const currentVersion = packageData.version || '0.0.0';
+  // Get current version
+  const { version: currentVersion, source } = getCurrentVersion();
+
+  if (!source) {
+    warning('No version found in any file, using default 0.0.0');
+  }
 
   // Calculate new version
   const newVersion = incrementVersion(currentVersion, versionType);
 
   // Display version information
-  info(`Current version: ${currentVersion}`);
+  info(`Current version: ${currentVersion}${source ? ` (from ${source})` : ''}`);
   info(`New version: ${newVersion} (${versionType})`);
 
   if (dryRun) {
     info('Files that would be updated:');
-    info('- package.json');
+    if (fs.existsSync(PACKAGE_JSON_PATH)) info('- package.json');
+    if (fs.existsSync(VSCODE_EXTENSION_PACKAGE)) info('- vscode-extension/package.json');
+    if (fs.existsSync(PYPROJECT_PATH)) info('- pyproject.toml');
+    if (fs.existsSync(ENVIRONMENT_PATH)) info('- environment.yml');
     info('- CHANGELOG.md');
-    info(`Git tag that would be created: v${newVersion}`);
+    if (!noGit) info(`Git tag that would be created: v${newVersion}`);
     return;
   }
 
-  // Update package.json
-  packageData.version = newVersion;
-  writePackageJson(packageData);
-
-  // Update CHANGELOG.md
+  // Update all version files
+  updatePackageJson(newVersion);
+  updateVSCodeExtension(newVersion);
+  updatePyproject(newVersion);
+  updateEnvironment(newVersion);
   updateChangelog(newVersion, currentVersion);
 
   // Git operations (if not disabled)
   if (!noGit) {
     try {
-      execSync('git add package.json CHANGELOG.md', { cwd: PROJECT_ROOT });
+      const filesToAdd = ['CHANGELOG.md'];
+      if (fs.existsSync(PACKAGE_JSON_PATH)) filesToAdd.push('package.json');
+      if (fs.existsSync(VSCODE_EXTENSION_PACKAGE)) filesToAdd.push('vscode-extension/package.json');
+      if (fs.existsSync(PYPROJECT_PATH)) filesToAdd.push('pyproject.toml');
+      if (fs.existsSync(ENVIRONMENT_PATH)) filesToAdd.push('environment.yml');
+
+      execSync(`git add ${filesToAdd.join(' ')}`, { cwd: PROJECT_ROOT });
       execSync(`git commit -m "Bump version to ${newVersion}"`, { cwd: PROJECT_ROOT });
       execSync(`git tag -a v${newVersion} -m "Version ${newVersion}"`, { cwd: PROJECT_ROOT });
       success(`Git tag v${newVersion} created and committed`);
     } catch (e) {
-      warning('Git operations skipped or failed');
+      warning(`Git operations failed: ${e.message}`);
     }
   }
 
