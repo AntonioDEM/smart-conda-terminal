@@ -1,7 +1,7 @@
 {
   "name": "smart-conda-workspace",
   "publisher": "antoniodemarcus",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "displayName": "Smart Conda Workspace",
   "description": "Minimal workspace configuration and versioning for conda projects",
   "license": "MIT",
