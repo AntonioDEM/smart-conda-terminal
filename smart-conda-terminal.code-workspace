@@ -5,44 +5,120 @@
         }
     ],
     "settings": {
-        "python.defaultInterpreterPath": "/Users/tony/miniconda3/envs/sct-dev/bin/python",
+        // ===== PYTHON CONFIGURATION =====
+        // Usa variabili d'ambiente invece di path assoluti
+        "python.defaultInterpreterPath": "${env:CONDA_PREFIX}/bin/python",
         "python.terminal.activateEnvironment": true,
-        "python.condaPath": "/Users/tony/miniconda3/bin/conda",
+
+        // ===== TERMINAL PROFILES - macOS =====
         "terminal.integrated.defaultProfile.osx": "conda-dev",
-        "terminal.integrated.defaultProfile.linux": "conda-dev",
         "terminal.integrated.profiles.osx": {
             "conda-dev": {
                 "path": "/bin/zsh",
-                "args": ["-l", "-c", "source /Users/tony/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec zsh"]
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec zsh"
+                ]
+            },
+            "conda-dev-bash": {
+                "path": "/bin/bash",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"
+                ]
             }
         },
+
+        // ===== TERMINAL PROFILES - Linux =====
+        "terminal.integrated.defaultProfile.linux": "conda-dev",
         "terminal.integrated.profiles.linux": {
             "conda-dev": {
                 "path": "/bin/bash",
-                "args": ["-l", "-c", "source /Users/tony/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"]
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"
+                ]
+            },
+            "conda-dev-zsh": {
+                "path": "/bin/zsh",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec zsh"
+                ]
             }
         },
+
+        // ===== TERMINAL PROFILES - Windows =====
+        "terminal.integrated.defaultProfile.windows": "conda-dev-powershell",
+        "terminal.integrated.profiles.windows": {
+            "conda-dev-powershell": {
+                "path": "powershell.exe",
+                "args": [
+                    "-NoExit",
+                    "-Command",
+                    "conda activate sct-dev"
+                ]
+            },
+            "conda-dev-cmd": {
+                "path": "cmd.exe",
+                "args": [
+                    "/K",
+                    "conda activate sct-dev"
+                ]
+            },
+            "Git Bash (Conda)": {
+                "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"
+                ]
+            }
+        },
+
+        // ===== EDITOR SETTINGS =====
         "editor.formatOnSave": true,
         "editor.insertSpaces": true,
         "editor.tabSize": 2,
         "files.trimTrailingWhitespace": true,
+
+        // ===== FILE EXCLUSIONS =====
         "files.exclude": {
             "out": false,
             "dist": true,
             ".node_modules": true,
-            "**/.DS_Store": true
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "**/.vscode/*.local.json": true
         },
+
         "search.exclude": {
             "out": true,
             "dist": true,
-            ".node_modules": true
-        }
+            ".node_modules": true,
+            "**/.git": true
+        },
+
+        // ===== JAVASCRIPT SETTINGS =====
+        "javascript.format.enable": true,
+        "javascript.suggest.autoImports": true,
+        "javascript.updateImportsOnFileMove.enabled": "always",
+
+        // ===== END-OF-LINE SETTINGS (importante per cross-platform) =====
+        "files.eol": "\n",
+        "files.encoding": "utf8"
     },
+
     "extensions": {
         "recommendations": [
             "ms-python.python",
             "ms-python.vscode-pylance",
-            "esbenp.prettier-vscode"
+            "esbenp.prettier-vscode",
+            "dbaeumer.vscode-eslint"
         ]
     }
 }

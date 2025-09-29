@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "install",
+      "problemMatcher": [],
+      "label": "npm: install",
+      "detail": "Install dependencies"
+    },
+    {
+      "type": "npm",
+      "script": "package",
+      "problemMatcher": [],
+      "label": "npm: package",
+      "detail": "Package extension"
+    },
+    {
+      "type": "shell",
+      "label": "Activate Conda Environment",
+      "command": "conda activate sct-dev",
+      "problemMatcher": []
+    }
+  ]
+}

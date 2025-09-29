@@ -7,6 +7,7 @@ yarn.lock
 # Build outputs
 out/
 dist/
+*.vsix
 
 # OS files
 .DS_Store
@@ -14,8 +15,16 @@ Thumbs.db
 *.swp
 *.swo
 
-# IDE
+# IDE - Ignore local settings, keep shared configs
+.vscode/settings.json.local
+.vscode/*.local.json
 .idea/
+
+# Keep these VS Code files (they're platform-agnostic)
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/tasks.json
 
 # Logs
 *.log

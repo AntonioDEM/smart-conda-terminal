@@ -1,0 +1,48 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "python.defaultInterpreterPath": "/Users/tony/miniconda3/envs/sct-dev/bin/python",
+        "python.terminal.activateEnvironment": true,
+        "python.condaPath": "/Users/tony/miniconda3/bin/conda",
+        "terminal.integrated.defaultProfile.osx": "conda-dev",
+        "terminal.integrated.defaultProfile.linux": "conda-dev",
+        "terminal.integrated.profiles.osx": {
+            "conda-dev": {
+                "path": "/bin/zsh",
+                "args": ["-l", "-c", "source /Users/tony/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec zsh"]
+            }
+        },
+        "terminal.integrated.profiles.linux": {
+            "conda-dev": {
+                "path": "/bin/bash",
+                "args": ["-l", "-c", "source /Users/tony/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"]
+            }
+        },
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "files.trimTrailingWhitespace": true,
+        "files.exclude": {
+            "out": false,
+            "dist": true,
+            ".node_modules": true,
+            "**/.DS_Store": true
+        },
+        "search.exclude": {
+            "out": true,
+            "dist": true,
+            ".node_modules": true
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "esbenp.prettier-vscode"
+        ]
+    }
+}
