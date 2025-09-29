@@ -181,56 +181,160 @@ async function getCondaEnvironments() {
             }
         }
 
-        // Get list of conda environments
-        const condaEnvList = execSync('conda env list --json', {
-            encoding: 'utf8',
-            windowsHide: true,
-            timeout: 10000
-        });
-        const envData = JSON.parse(condaEnvList);
-
+        // Get list of conda environments using multiple methods
         const environments = [];
 
-        for (const envPath of envData.envs) {
-            // Skip if path doesn't exist
-            if (!fs.existsSync(envPath)) continue;
+        // Method 1: conda env list command (primary)
+        try {
+            const condaEnvList = execSync('conda env list --json', {
+                encoding: 'utf8',
+                windowsHide: true,
+                timeout: 10000
+            });
+            const envData = JSON.parse(condaEnvList);
 
-            const envName = path.basename(envPath);
+            for (const envPath of envData.envs) {
+                // Skip if path doesn't exist
+                if (!fs.existsSync(envPath)) continue;
 
-            // Platform-specific paths
-            const pythonPath = isWindows
-                ? path.join(envPath, 'python.exe')
-                : path.join(envPath, 'bin', 'python');
+                const envName = path.basename(envPath);
 
-            // Use conda base for conda executable
-            const condaPath = isWindows
-                ? path.join(condaBase, 'Scripts', 'conda.exe')
-                : path.join(condaBase, 'bin', 'conda');
+                // Platform-specific paths
+                const pythonPath = isWindows
+                    ? path.join(envPath, 'python.exe')
+                    : path.join(envPath, 'bin', 'python');
 
-            // Try to get Python version
-            let pythonVersion = 'Unknown';
-            try {
-                const versionCmd = isWindows
-                    ? `"${pythonPath}" --version 2>&1`
-                    : `"${pythonPath}" --version 2>&1`;
+                // Use conda base for conda executable
+                const condaPath = isWindows
+                    ? path.join(condaBase, 'Scripts', 'conda.exe')
+                    : path.join(condaBase, 'bin', 'conda');
 
-                const versionOutput = execSync(versionCmd, {
-                    encoding: 'utf8',
-                    timeout: 5000,
-                    windowsHide: true
+                // Try to get Python version
+                let pythonVersion = 'Unknown';
+                try {
+                    const versionCmd = isWindows
+                        ? `"${pythonPath}" --version 2>&1`
+                        : `"${pythonPath}" --version 2>&1`;
+
+                    const versionOutput = execSync(versionCmd, {
+                        encoding: 'utf8',
+                        timeout: 5000,
+                        windowsHide: true
+                    });
+                    pythonVersion = versionOutput.trim().replace('Python ', '');
+                } catch (e) {
+                    // Ignore version detection errors
+                }
+
+                environments.push({
+                    name: envName,
+                    path: envPath,
+                    python: pythonPath,
+                    conda: condaPath,
+                    python_version: pythonVersion
                 });
-                pythonVersion = versionOutput.trim().replace('Python ', '');
-            } catch (e) {
-                // Ignore version detection errors
+            }
+        } catch (error) {
+            console.log('Conda env list command failed, trying alternative methods...');
+        }
+
+        // Method 2: Scan all possible envs directories (fallback for Windows)
+        if (environments.length === 0 || isWindows) {
+            const possibleEnvsDirs = [
+                path.join(condaBase, 'envs'),
+                path.join(require('os').homedir(), '.conda', 'envs') // ← QUESTA È FUNDAMENTALE
+            ];
+
+            for (const envsDir of possibleEnvsDirs) {
+                if (fs.existsSync(envsDir)) {
+                    try {
+                        const entries = fs.readdirSync(envsDir, { withFileTypes: true });
+                        const envDirs = entries
+                            .filter(entry => entry.isDirectory())
+                            .map(entry => entry.name);
+
+                        for (const envName of envDirs) {
+                            // Skip if we already have this environment
+                            if (environments.some(env => env.name === envName)) continue;
+
+                            const envPath = path.join(envsDir, envName);
+                            const pythonPath = isWindows
+                                ? path.join(envPath, 'python.exe')
+                                : path.join(envPath, 'bin', 'python');
+
+                            const condaPath = isWindows
+                                ? path.join(condaBase, 'Scripts', 'conda.exe')
+                                : path.join(condaBase, 'bin', 'conda');
+
+                            // Try to get Python version
+                            let pythonVersion = 'Unknown';
+                            try {
+                                if (fs.existsSync(pythonPath)) {
+                                    const versionCmd = isWindows
+                                        ? `"${pythonPath}" --version 2>&1`
+                                        : `"${pythonPath}" --version 2>&1`;
+
+                                    const versionOutput = execSync(versionCmd, {
+                                        encoding: 'utf8',
+                                        timeout: 5000,
+                                        windowsHide: true
+                                    });
+                                    pythonVersion = versionOutput.trim().replace('Python ', '');
+                                }
+                            } catch (e) {
+                                // Ignore version detection errors
+                            }
+
+                            environments.push({
+                                name: envName,
+                                path: envPath,
+                                python: pythonPath,
+                                conda: condaPath,
+                                python_version: pythonVersion
+                            });
+                        }
+                    } catch (e) {
+                        console.log(`Failed to scan ${envsDir}:`, e.message);
+                    }
+                }
             }
 
-            environments.push({
-                name: envName,
-                path: envPath,
-                python: pythonPath,
-                conda: condaPath,
-                python_version: pythonVersion
-            });
+            // Add base environment if not present
+            if (!environments.some(env => env.name === 'base')) {
+                const basePythonPath = isWindows
+                    ? path.join(condaBase, 'python.exe')
+                    : path.join(condaBase, 'bin', 'python');
+
+                const baseCondaPath = isWindows
+                    ? path.join(condaBase, 'Scripts', 'conda.exe')
+                    : path.join(condaBase, 'bin', 'conda');
+
+                let basePythonVersion = 'Unknown';
+                try {
+                    if (fs.existsSync(basePythonPath)) {
+                        const versionCmd = isWindows
+                            ? `"${basePythonPath}" --version 2>&1`
+                            : `"${basePythonPath}" --version 2>&1`;
+
+                        const versionOutput = execSync(versionCmd, {
+                            encoding: 'utf8',
+                            timeout: 5000,
+                            windowsHide: true
+                        });
+                        basePythonVersion = versionOutput.trim().replace('Python ', '');
+                    }
+                } catch (e) {
+                    // Ignore version detection errors
+                }
+
+                environments.push({
+                    name: 'base',
+                    path: condaBase,
+                    python: basePythonPath,
+                    conda: baseCondaPath,
+                    python_version: basePythonVersion
+                });
+            }
         }
 
         // Sort environments: current active first, then alphabetically
@@ -246,7 +350,7 @@ async function getCondaEnvironments() {
     } catch (error) {
         console.error('Failed to get conda environments:', error);
 
-        // Enhanced fallback for Windows
+        // Enhanced fallback
         const homeDir = require('os').homedir();
         const isWindows = process.platform === 'win32';
 
@@ -257,6 +361,7 @@ async function getCondaEnvironments() {
             possiblePaths.push(
                 path.join(homeDir, 'miniconda3'),
                 path.join(homeDir, 'anaconda3'),
+                path.join(homeDir, '.conda'), // ← AGGIUNTA IMPORTANTE
                 'C:\\ProgramData\\miniconda3',
                 'C:\\ProgramData\\anaconda3',
                 'C:\\Miniconda3',
@@ -285,27 +390,33 @@ async function getCondaEnvironments() {
                 : path.join(homeDir, 'miniconda3');
         }
 
-        // Get all environments by scanning envs directory
-        const envsDir = path.join(condaBase, 'envs');
-        let envNames = ['base']; // Always include base
+        // Get all environments by scanning all possible locations
+        const envNames = new Set(['base']);
+        const possibleEnvsDirs = [
+            path.join(condaBase, 'envs'),
+            path.join(homeDir, '.conda', 'envs') // ← ANCHE QUI
+        ];
 
-        if (fs.existsSync(envsDir)) {
-            try {
-                const envEntries = fs.readdirSync(envsDir, { withFileTypes: true });
-                const envDirs = envEntries
-                    .filter(entry => entry.isDirectory())
-                    .map(entry => entry.name);
-                envNames = [...envNames, ...envDirs];
-            } catch (e) {
-                console.error('Failed to read envs directory:', e);
-                envNames = ['base', 'sct-dev']; // Fallback to default
+        for (const envsDir of possibleEnvsDirs) {
+            if (fs.existsSync(envsDir)) {
+                try {
+                    const entries = fs.readdirSync(envsDir, { withFileTypes: true });
+                    const envDirs = entries
+                        .filter(entry => entry.isDirectory())
+                        .map(entry => entry.name);
+
+                    envDirs.forEach(envName => envNames.add(envName));
+                } catch (e) {
+                    console.error('Failed to read envs directory:', e);
+                }
             }
-        } else {
-            envNames = ['base', 'sct-dev']; // Fallback to default
         }
 
-        return envNames.map(envName => {
-            const envPath = envName === 'base' ? condaBase : path.join(condaBase, 'envs', envName);
+        return Array.from(envNames).map(envName => {
+            const envPath = envName === 'base' ? condaBase :
+                           [path.join(condaBase, 'envs', envName),
+                            path.join(homeDir, '.conda', 'envs', envName)]
+                           .find(p => fs.existsSync(p)) || path.join(condaBase, 'envs', envName);
 
             return {
                 name: envName,
