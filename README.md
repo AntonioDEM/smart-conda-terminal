@@ -1,6 +1,8 @@
-# <img src="./resources/icons/favicon.svg" width="36" height="36" style="vertical-align: middle; margin-right: 1px;"> Smart Conda Terminal
+# <img src="./resources/icons/favicon.svg" width="36" height="36" style="vertical-align: middle; margin-right: 1px;"> # Smart Conda Terminal
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue.svg) <img src="https://img.shields.io/badge/Node-24.8.0%2B-blue"/>![Status](https://img.shields.io/badge/status-stable-green.svg)![Last Commit](https://img.shields.io/badge/last_commit-September_2025-green.svg)
+## published as "Smart Conda Workspace"
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg) <img src="https://img.shields.io/badge/Node-24.8.0%2B-blue"/>![Status](https://img.shields.io/badge/status-stable-green.svg)![Last Commit](https://img.shields.io/badge/last_commit-September_2025-green.svg) [![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/AntonioDemarcus.smart-conda-workspace?style=flat-square&logo=visual-studio-code&logoColor=white&label=Marketplace)](https://marketplace.visualstudio.com/items?itemName=AntonioDemarcus.smart-conda-workspace)[![Downloads](https://img.shields.io/visual-studio-marketplace/d/AntonioDemarcus.smart-conda-workspace?style=flat-square&logo=visual-studio-code&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=AntonioDemarcus.smart-conda-workspace)
 
 ### S.O.S : ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
 
