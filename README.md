@@ -1,4 +1,4 @@
-# <img src="./resources/icons/favicon.svg" width="36" height="36" style="vertical-align: middle; margin-right: 1px;"> # Smart Conda Terminal
+# <img src="./resources/icons/favicon.svg" width="76" height="76" style="vertical-align: middle; margin-right: 1px;">Smart Conda Terminal
 
 #### published as "*Smart Conda Workspace*"
 
