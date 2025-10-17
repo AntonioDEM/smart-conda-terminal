@@ -1,0 +1,53 @@
+# Build outputs
+out/
+dist/
+*.vsix
+
+# Dependencies
+node_modules/
+.node_modules/
+npm-debug.log*
+#package-lock.json
+#yarn.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Cache
+.npm
+.cache/
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Backup files
+*.backup
+*.bak
+
+# Hidden files
+.*
+
+# Scripts (se non necessari per l'estensione)
+scripts/

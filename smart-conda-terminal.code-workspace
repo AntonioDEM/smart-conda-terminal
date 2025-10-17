@@ -1,0 +1,159 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        // ===== PYTHON CONFIGURATION =====
+        // Usa variabili d'ambiente invece di path assoluti
+        "python.defaultInterpreterPath": "${env:CONDA_PREFIX}/bin/python",
+        "python.terminal.activateEnvironment": true,
+
+        // ===== TERMINAL PROFILES - macOS =====
+        "terminal.integrated.defaultProfile.osx": "conda-dev",
+        "terminal.integrated.profiles.osx": {
+            "conda-dev": {
+                "path": "/bin/zsh",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec zsh"
+                ]
+            },
+            "conda-dev-bash": {
+                "path": "/bin/bash",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"
+                ]
+            }
+        },
+
+        // ===== TERMINAL PROFILES - Linux =====
+        "terminal.integrated.defaultProfile.linux": "conda-dev",
+        "terminal.integrated.profiles.linux": {
+            "conda-dev": {
+                "path": "/bin/bash",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"
+                ]
+            },
+            "conda-dev-zsh": {
+                "path": "/bin/zsh",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec zsh"
+                ]
+            }
+        },
+
+        // ===== TERMINAL PROFILES - Windows =====
+        "terminal.integrated.defaultProfile.windows": "PowerShell",
+        "terminal.integrated.profiles.windows": {
+            "conda-dev-powershell": {
+                "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "args": [
+                "-ExecutionPolicy", "ByPass",
+                "-NoExit",
+                "-Command",
+                "& 'C:\\ProgramData\\miniconda3\\Lib\\site-packages\\conda\\shell\\condabin\\conda-hook.ps1'; conda activate sct-dev; Clear-Host; Write-Host '🐍 Ambiente sct-dev attivato!' -ForegroundColor Green; Write-Host 'Python:' $(python --version 2>$null) -ForegroundColor Cyan; Write-Host 'Node.js:' $(node --version 2>$null) -ForegroundColor Cyan"
+                ],
+                "icon": "terminal-powershell",
+                "color": "terminal.ansiGreen"
+            },
+            "conda-dev-cmd": {
+                "path": "C:\\Windows\\System32\\cmd.exe",
+                "args": [
+                "/K",
+                "C:\\ProgramData\\miniconda3\\Scripts\\activate.bat sct-dev && echo Ambiente sct-dev attivato!"
+                ],
+                "icon": "terminal-cmd",
+                "color": "terminal.ansiBlue"
+            },
+            "PowerShell": {
+                    "source": "PowerShell",
+                    "icon": "terminal-powershell"
+            },
+
+            "Git Bash (Conda)": {
+                "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+                "args": [
+                    "-l",
+                    "-c",
+                    "source ~/miniconda3/etc/profile.d/conda.sh && conda activate sct-dev; exec bash"
+                ]
+            }
+        },
+
+        // ===== EDITOR SETTINGS =====
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "files.trimTrailingWhitespace": true,
+
+        // Configurazioni aggiuntive per Windows
+        "terminal.integrated.defaultLocation": "editor",
+        "terminal.integrated.enableMultiLinePasteWarning": "never",
+        "git.autofetch": true,
+        "git.confirmSync": false,
+
+        // ===== FILE EXCLUSIONS =====
+        "files.exclude": {
+            "out": false,
+            "dist": true,
+            ".node_modules": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "**/.vscode/*.local.json": true
+        },
+
+        // Esclusioni specifiche per Windows
+        "files.watcherExclude": {
+            "**/.git/objects/**": true,
+            "**/.git/subtree-cache/**": true,
+            "**/node_modules/*/**": true,
+            "**/.node_modules/*/**": true,
+            "**/dist/**": true,
+            "**/out/**": true
+        },
+
+        "search.exclude": {
+            "out": true,
+            "dist": true,
+            ".node_modules": true,
+            "**/.git": true
+        },
+
+        // ===== JAVASCRIPT SETTINGS =====
+        "javascript.format.enable": true,
+        "javascript.suggest.autoImports": true,
+        "javascript.updateImportsOnFileMove.enabled": "always",
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "npm.enableRunFromFolder": true,
+
+        // ===== END-OF-LINE SETTINGS (importante per cross-platform) =====
+        "files.eol": "\n",
+        "files.encoding": "utf8"
+    },
+
+    "extensions": {
+        "recommendations": [
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "ms-python.black-formatter",
+            "ms-python.flake8",
+            "ms-python.isort",
+            "ms-toolsai.jupyter",
+            "ms-vscode.powershell",
+            "ms-vscode.vscode-json",
+            "esbenp.prettier-vscode",
+            "dbaeumer.vscode-eslint",
+            "eamodio.gitlens",
+        ]
+    }
+}

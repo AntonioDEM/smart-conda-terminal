@@ -1,0 +1,62 @@
+# Dependencies
+.node_modules/
+npm-debug.log*
+#package-lock.json
+yarn.lock
+
+# Build outputs
+out/
+dist/
+*.vsix
+
+#vsCode File
+smart-conda-terminal copia.code-workspace
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE - Ignore local settings, keep shared configs
+.vscode/settings.json.local
+.vscode/*.local.json
+.idea/
+
+# Keep these VS Code files (they're platform-agnostic)
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Cache
+.npm
+.cache/
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Backup files
+*.backup
+*.bak
+
+# Smart Conda Terminal specific
+.smart-conda-terminal/
+conda-meta/
+
+# Shell backups
+.zshrc.backup.*
+.bashrc.backup.*
+.bash_profile.backup.*
+vscode-extension/img/*.gif
+vscode-extension/img/*.gif

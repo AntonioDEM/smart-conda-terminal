@@ -1,0 +1,107 @@
+{
+  "base": {
+    "settings": {
+      "editor.formatOnSave": true,
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2,
+      "files.trimTrailingWhitespace": true,
+      "files.exclude": {
+        "out": false,
+        "dist": true,
+        ".node_modules": true,
+        "**/.DS_Store": true,
+        "**/__pycache__": true,
+        "**/*.pyc": true
+      },
+      "search.exclude": {
+        "out": true,
+        "dist": true,
+        ".node_modules": true,
+        "__pycache__": true
+      }
+    },
+    "extensions": {
+      "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  },
+  "python": {
+    "settings": {
+      "python.analysis.autoImportCompletions": true,
+      "python.analysis.typeCheckingMode": "basic",
+      "python.formatting.provider": "black",
+      "python.linting.enabled": true,
+      "python.linting.pylintEnabled": true,
+      "python.testing.pytestEnabled": true,
+      "[python]": {
+        "editor.tabSize": 4,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+      }
+    },
+    "extensions": {
+      "recommendations": [
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.isort",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "node.js": {
+    "settings": {
+      "javascript.format.enable": true,
+      "javascript.suggest.autoImports": true,
+      "javascript.updateImportsOnFileMove.enabled": "always",
+      "typescript.preferences.importModuleSpecifier": "relative",
+      "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    },
+    "extensions": {
+      "recommendations": [
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  },
+  "mixed": {
+    "settings": {
+      "python.analysis.autoImportCompletions": true,
+      "python.analysis.typeCheckingMode": "basic",
+      "python.formatting.provider": "black",
+      "javascript.format.enable": true,
+      "javascript.suggest.autoImports": true,
+      "[python]": {
+        "editor.tabSize": 4,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+      },
+      "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    },
+    "extensions": {
+      "recommendations": [
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-toolsai.jupyter",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  }
+}

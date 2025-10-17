@@ -1,0 +1,156 @@
+{
+  "name": "smart-conda-workspace",
+  "publisher": "antoniodemarcus",
+  "version": "2.0.0",
+  "displayName": "Smart Conda Workspace",
+  "description": "Minimal workspace configuration and versioning for conda projects",
+  "license": "MIT",
+  "author": {
+    "name": "Antonio Demarcus",
+    "email": "iperstatica@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smart-conda-terminal/smart-conda-workspace.git"
+  },
+  "homepage": "https://github.com/smart-conda-terminal/smart-conda-workspace#readme",
+  "bugs": {
+    "url": "https://github.com/smart-conda-terminal/smart-conda-workspace/issues"
+  },
+  "engines": {
+    "vscode": "^1.75.0",
+    "node": ">=16.0.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "conda",
+    "python",
+    "environment",
+    "terminal",
+    "automation",
+    "data-science",
+    "machine-learning",
+    "anaconda",
+    "miniconda",
+    "workspace",
+    "development",
+    "nodejs",
+    "windows",
+    "macos",
+    "linux",
+    "powershell"
+  ],
+  "icon": "icons/favicon-128x128.png",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "workspaceContains:**/environment.yml",
+    "workspaceContains:**/environment.yaml",
+    "workspaceContains:**/pyproject.toml",
+    "workspaceContains:**/.condarc",
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "smartCondaWorkspace.configureWorkspace",
+        "title": "Configure Workspace",
+        "category": "Smart Conda",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "smartCondaWorkspace.updateVersion",
+        "title": "Update Project Version",
+        "category": "Smart Conda",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "smartCondaWorkspace.logUpdate",
+        "title": "Log Update",
+        "category": "Smart Conda",
+        "icon": "$(notebook)"
+      },
+      {
+        "command": "smartCondaWorkspace.createRequirements",
+        "title": "Create Requirements.txt",
+        "category": "Smart Conda",
+        "icon": "$(list-ordered)"
+      },
+      {
+        "command": "smartCondaWorkspace.createEnvironment",
+        "title": "Create New Environment",
+        "category": "Smart Conda",
+        "icon": "$(add)"
+      },
+      {
+        "command": "smartCondaWorkspace.exportEnvironmentYml",
+        "title": "Export Environment.yml",
+        "category": "Smart Conda",
+        "icon": "$(file)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "smartCondaWorkspace.configureWorkspace",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "smartCondaWorkspace.updateVersion",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "smartCondaWorkspace.logUpdate",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "smartCondaWorkspace.createRequirements",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "smartCondaWorkspace.createEnvironment",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "smartCondaWorkspace.exportEnvironmentYml",
+          "when": "workspaceFolderCount > 0"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "smartConda",
+          "title": "Smart Conda",
+          "icon": "icons/favicon.svg"
+        }
+      ]
+    },
+    "views": {
+      "smartConda": [
+        {
+          "id": "smartCondaViewActivity",
+          "name": "Smart Conda",
+          "icon": "icons/favicon.svg"
+        }
+      ],
+      "explorer": [
+        {
+          "id": "smartCondaView",
+          "name": "Smart Conda",
+          "icon": "icons/favicon.svg",
+          "when": "workspaceFolderCount > 0"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "compile": "echo 'No compilation needed for JavaScript extension'",
+    "watch": "echo 'Watch mode not needed for JavaScript extension'"
+  }
+}

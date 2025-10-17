@@ -1,0 +1,134 @@
+{
+  "name": "smart-conda-terminal",
+  "displayName": "Smart Conda Terminal",
+  "description": "Automated conda environment management for Python projects in VS Code. Zero-configuration setup with intelligent project detection and seamless terminal integration.",
+  "version": "2.0.0",
+  "publisher": "smart-conda-terminal",
+  "license": "MIT",
+  "author": {
+    "name": "Antonio Demarcus",
+    "email": "iperstatica@gmail.com"
+  },
+  "homepage": "https://github.com/smart-conda-terminal/smart-conda-terminal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smart-conda-terminal/smart-conda-terminal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smart-conda-terminal/smart-conda-terminal/issues"
+  },
+  "engines": {
+    "vscode": "^1.70.0",
+    "node": ">=16.0.0"
+  },
+  "categories": [
+    "Other",
+    "Data Science",
+    "Machine Learning",
+    "Debuggers"
+  ],
+  "keywords": [
+    "conda",
+    "python",
+    "environment",
+    "terminal",
+    "automation",
+    "data-science",
+    "machine-learning",
+    "anaconda",
+    "miniconda",
+    "workspace"
+  ],
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "icon": "resources/icons/favicon-64x64.png",
+  "activationEvents": [
+    "workspaceContains:**/environment.yml",
+    "workspaceContains:**/environment.yaml",
+    "workspaceContains:**/pyproject.toml",
+    "workspaceContains:**/conda-meta/",
+    "workspaceContains:**/.condarc",
+    "onStartupFinished"
+  ],
+  "main": "./vscode-extension/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "smartCondaTerminal.setupProject",
+        "title": "Setup Current Project",
+        "category": "Smart Conda Terminal",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "smartCondaTerminal.switchEnvironment",
+        "title": "Switch Environment",
+        "category": "Smart Conda Terminal",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "smartCondaTerminal.createEnvironment",
+        "title": "Create New Environment",
+        "category": "Smart Conda Terminal",
+        "icon": "$(add)"
+      },
+      {
+        "command": "smartCondaTerminal.healthCheck",
+        "title": "Run Health Check",
+        "category": "Smart Conda Terminal",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "smartCondaTerminal.cleanupProject",
+        "title": "Remove Project Configuration",
+        "category": "Smart Conda Terminal",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "smartCondaTerminal.syncEnvironment",
+        "title": "Sync with environment.yml",
+        "category": "Smart Conda Terminal",
+        "icon": "$(sync)"
+      }
+    ],
+    "configuration": {
+      "title": "Smart Conda Terminal",
+      "properties": {
+        "smartCondaTerminal.autoSetup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically setup conda environment when opening a project"
+        },
+        "smartCondaTerminal.shellIntegration": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "zsh",
+            "bash",
+            "fish",
+            "powershell",
+            "none"
+          ],
+          "default": "auto",
+          "description": "Shell type for conda integration (auto-detect recommended)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "package": "vsce package",
+    "version:patch": "node scripts/update-version.js patch",
+    "version:minor": "node scripts/update-version.js minor",
+    "version:major": "node scripts/update-version.js major",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^2.20.1"
+  },
+  "dependencies": {
+    "cross-spawn": "^7.0.3",
+    "js-yaml": "^4.1.0"
+  }
+}
