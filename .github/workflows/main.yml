@@ -9,7 +9,7 @@ on:
         description: "Publish to VS Marketplace"
         type: boolean
         required: true
-        default: true
+        default: false #workflow_dispatch va successivamente eseguto da github per pubblicare la release
 
 jobs:
   package:
