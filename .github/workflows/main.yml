@@ -51,9 +51,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - uses: actions/download-artifact@v4
         with:
           name: ${{ needs.package.outputs.packageName }}
+          path: .
 
       - name: Publish to VS Marketplace
         run: npx vsce publish --packagePath ./${{ needs.package.outputs.packageName }} -p "${{ secrets.VSCE_PAT }}"
