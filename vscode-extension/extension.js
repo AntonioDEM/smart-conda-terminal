@@ -97,6 +97,9 @@ async function configureWorkspaceCommand() {
         // Configure shell auto-activation
         await configureShellAutoActivation(workspaceFolder, selectedEnv.env);
 
+        // Apply settings in current workspace and open activated terminal (no reopen)
+        await applySettingsAndActivateTerminal(workspaceFolder, selectedEnv.env);
+
         // Offline reminder: append a dated entry to STRUTTURA_PROGETTO.md
         const osLabel = process.platform === 'win32' ? 'Windows' : (process.platform === 'darwin' ? 'macOS' : 'Linux');
         appendStructureLog(
@@ -104,17 +107,16 @@ async function configureWorkspaceCommand() {
             `Workspace configurato per ambiente '${selectedEnv.env.name}' su ${osLabel}; profili terminale con messaggio unico (Python; Node; npm se presenti).`
         );
 
-        // Show success message with option to open workspace
+        // Show success message with option to reload or open workspace file
         const action = await vscode.window.showInformationMessage(
-            `Workspace configured for ${selectedType.label} project with environment: ${selectedEnv.env.name}`,
-            'Open Workspace Now', 'Manual Reload'
+            `Workspace configured for ${selectedType.label} with env '${selectedEnv.env.name}'. A new terminal is ready with the env activated.`,
+            'Reload Window', 'Open Workspace File'
         );
 
-        if (action === 'Open Workspace Now') {
-            // Close current window and open workspace
+        if (action === 'Reload Window') {
+            await vscode.commands.executeCommand('workbench.action.reloadWindow');
+        } else if (action === 'Open Workspace File') {
             await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(workspaceFile), { forceNewWindow: false });
-        } else if (action === 'Manual Reload') {
-            vscode.window.showInformationMessage(`Please open: ${path.basename(workspaceFile)}`);
         }
 
     } catch (error) {
@@ -122,6 +124,58 @@ async function configureWorkspaceCommand() {
     }
 }
 
+// Apply settings immediately and create a terminal with the selected env activated
+async function applySettingsAndActivateTerminal(workspaceFolder, condaEnv) {
+    try {
+        const config = vscode.workspace.getConfiguration ? vscode.workspace.getConfiguration() : null;
+        if (config) {
+            await config.update('python.defaultInterpreterPath', condaEnv.python, vscode.ConfigurationTarget.Workspace);
+            await config.update('python.condaPath', condaEnv.conda, vscode.ConfigurationTarget.Workspace);
+            await config.update('python.terminal.activateEnvironment', true, vscode.ConfigurationTarget.Workspace);
+
+            const isWin = process.platform === 'win32';
+            if (isWin) {
+                const profiles = config.get('terminal.integrated.profiles.windows') || {};
+                profiles['conda-env'] = {
+                    path: 'C\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
+                    args: ['-NoExit', '-Command', `conda activate ${condaEnv.name}`],
+                    icon: 'terminal-powershell'
+                };
+                await config.update('terminal.integrated.profiles.windows', profiles, vscode.ConfigurationTarget.Workspace);
+                await config.update('terminal.integrated.defaultProfile.windows', 'conda-env', vscode.ConfigurationTarget.Workspace);
+            } else {
+                const shellPath = process.env.SHELL || '/bin/bash';
+                const profilesKey = process.platform === 'darwin' ? 'terminal.integrated.profiles.osx' : 'terminal.integrated.profiles.linux';
+                const defaultKey = process.platform === 'darwin' ? 'terminal.integrated.defaultProfile.osx' : 'terminal.integrated.defaultProfile.linux';
+                const profiles = config.get(profilesKey) || {};
+                // Attempt to source conda.sh then activate
+                const base = (() => { try { return execSync('conda info --base', { encoding: 'utf8' }).trim(); } catch { return ''; } })();
+                const activateSnippet = base ? `source \"${base}/etc/profile.d/conda.sh\" && conda activate ${condaEnv.name}` : `conda activate ${condaEnv.name}`;
+                profiles['conda-env'] = { path: shellPath, args: ['-l', '-c', `${activateSnippet}; ${shellPath} -l`] };
+                await config.update(profilesKey, profiles, vscode.ConfigurationTarget.Workspace);
+                await config.update(defaultKey, 'conda-env', vscode.ConfigurationTarget.Workspace);
+            }
+        }
+
+        // Create a new terminal and activate env immediately
+        const term = vscode.window.createTerminal(`Conda: ${condaEnv.name}`);
+        const base = (() => { try { return execSync('conda info --base', { encoding: 'utf8' }).trim(); } catch { return ''; } })();
+        const isWin = process.platform === 'win32';
+        if (isWin) {
+            term.sendText(`conda activate ${condaEnv.name}`);
+        } else {
+            if (base) {
+                term.sendText(`source \"${base}/etc/profile.d/conda.sh\" || true; conda activate ${condaEnv.name}`);
+            } else {
+                term.sendText(`conda activate ${condaEnv.name}`);
+            }
+        }
+        term.show();
+    } catch (e) {
+        // Non-bloccante: se fallisce, almeno i settings sono aggiornati
+        try { vscode.window.showWarningMessage(`Immediate activation failed: ${e.message}`); } catch (_) {}
+    }
+}
 async function updateVersionCommand() {
     try {
         const workspaceFolder = getWorkspaceFolder();
