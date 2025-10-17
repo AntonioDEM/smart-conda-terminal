@@ -2,7 +2,7 @@
   "name": "smart-conda-terminal",
   "displayName": "Smart Conda Terminal",
   "description": "Automated conda environment management for Python projects in VS Code. Zero-configuration setup with intelligent project detection and seamless terminal integration.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "publisher": "smart-conda-terminal",
   "license": "MIT",
   "author": {
