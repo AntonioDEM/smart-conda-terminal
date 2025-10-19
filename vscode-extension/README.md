@@ -1,7 +1,7 @@
  <h1 align="center">Smart Conda Workspace</h1> <p align="center"> <i>Minimal VS Code extension for automated conda environment workspace configuration and project versioning."</i> </p> <p align="center">
 <p align="center">
   <a href="README.md"><img src="https://img.shields.io/badge/lang-en-blue.svg" alt="English"></a>
-  <a href="README.it.md"><img src="https://img.shields.io/badge/lang-it-green.svg" alt="Italiano"></a>
+  <a href="https://github.com/AntonioDEM/smart-conda-terminal/blob/main/README.it.md"><img src="https://img.shields.io/badge/lang-it-green.svg" alt="Italiano"></a>
 </p>
 
 ------
@@ -71,7 +71,7 @@
 
 3. **Configure workspace:** `Ctrl+Shift+P` → "Smart Conda: Configure Workspace"
 
-![Esempio di utilizzo dell'estensione](img/img1.png)
+![screenshot](https://raw.githubusercontent.com/AntonioDEM/smart-conda-terminal/main/vscode-extension/img/img1.png)
 
 ------
 
